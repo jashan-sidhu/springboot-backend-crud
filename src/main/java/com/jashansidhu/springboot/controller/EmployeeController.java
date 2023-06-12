@@ -4,6 +4,7 @@ import com.jashansidhu.springboot.exception.ResourceNotFoundException;
 import com.jashansidhu.springboot.model.Employee;
 import com.jashansidhu.springboot.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,17 @@ public class EmployeeController {
         employeeRepository.save(employee);
 
         return ResponseEntity.ok(employee);
+    }
+
+    //delete employee REST API
+    @DeleteMapping("{id}")
+    public ResponseEntity<Employee> deleteEmployee(@PathVariable long id){
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with ID : " + id));
+
+        employeeRepository.delete(employee);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
